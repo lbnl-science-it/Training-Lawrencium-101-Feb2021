@@ -20,19 +20,19 @@
   - Computational cycles are shared among all lawrencium users
 
 # System Capabilities
-IT Division & Condo Contributions
-1058 Compute nodes
-30,192 CPUs
-150 GPUs
-712 User Accounts
-317 Groups 
+- IT Division & Condo Contributions
+  - 1058 Compute nodes
+  - 30,192 CPUs
+  - 150 GPUs
+  - 712 User Accounts
+  - 317 Groups 
 
-Standalone Clusters
-UC Berkeley  
-Advanced Light Source   
-Nuclear Science Division   
-Applied Nuclear Physics
-Biological Systems Engineer Division
+- Standalone Clusters
+  - UC Berkeley  
+  - Advanced Light Source   
+  - Nuclear Science Division   
+  - Applied Nuclear Physics
+  - Biological Systems Engineer Division
 
 # Conceptual diagram of Lawrencium
 <left><img src="figures/lrc.png" width="70%"></left>
