@@ -70,6 +70,7 @@ $ password:
 # User Space
 ```
 /global/home/users/$USER
+- $Home: 10GB per user, backed up
 /global/scratch/$USER
 /global/home/groups-sw
 /global/home/group
@@ -80,9 +81,9 @@ $ password:
 - shared group space
 - condo storage 
 
-# Data Transfer on DTN 
+# Data Transfer 
 
-### scp/rsync on lrc-xfer.lbl.gov
+### scp/rsync on lrc-xfer.lbl.gov (DTN)
 ```
 # On local machine transfer to Lawrencium
 scp file-xxx $USER@lrc-xfer.lbl.gov:/global/home/users/$USER
