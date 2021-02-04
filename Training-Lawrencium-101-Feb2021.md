@@ -157,8 +157,10 @@ The basic workflow is:
 #### Accounts, Partitions, QOS
  
 - Check slurm association, such as qos, account, partition
+
+`sacctmgr show association user=wfeinstein -p`
+
 ```
-sacctmgr show association user=wfeinstein -p
 perceus-00|ac_test|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
@@ -166,17 +168,36 @@ perceus-00|lr_test|wfeinstein|lr3|1||||||||||||lr_debug,lr_lowprio,lr_normal,te
 perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ```
 
+#### Other slurm usage
+
 - Get help with the complete command options
 `sbatch --help`
 - sbatch: submit a job to the batch queue system
 `sbatch myjob.sh`
 - srun: request an interactive node(s) and login automatically
-`srun -A ac_xxx -p lr5 -q lr_normal -t 1:0:0 --pty bash`
-- salloc : request an interactive node(s)
-`salloc –A pc_xxx –p lr6 –q lr_debug –t 0:30:0`
+`srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash`
+- salloc : request an interactive GPU node(s)
+`salloc --account=pc_xxx --nodes=1 --partition=es1 --gres=gpu:1 --ntasks=2 --qos=es_normal –t 0:30:0`
+- More flags
+  - Specify node type --constrain (-C)
+  - Memeory contrain for shared cluster: --memory
 
 
-# Job Monitoring
+# Submitting a Batch Job 
+
+Job Submission Script Example
+
+```
+#!/bin/bash -l
+#SBATCH --job-name=container-test
+#SBATCH --partition=lr5
+#SBATCH --account=ac_xxx
+#SBATCH --qos=lr_normal
+#SBATCH --nodes=1
+#SBATCH -
+````
+
+# Monitoring Jobs
 
 - sinfo: check status of partitions and nodes (idle, allocated, drain, down) 
 `sinfo –r –p lr6`
@@ -186,16 +207,9 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 `sacct -X -o 'jobid,user,partition,nodelist,stat'`
 - scancel : cancel a job
 `scancel jobID`
-- Check slurm association, such as qos, account, partition
-```
-sacctmgr show association user=wfeinstein -p
-perceus-00|ac_test|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
-perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
-perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
-perceus-00|lr_test|wfeinstein|lr3|1||||||||||||lr_debug,lr_lowprio,lr_normal,te
-perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
-```
-[https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
+
+More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
+
 
 # Services (1)
 
@@ -235,20 +249,6 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 
 # Virtual Machine Services
 <left><img src="figures/vm.png" width="40%"></left>
-
-- Submit a slurm job 
-
-
-# Job Submission Example
-```
-#!/bin/bash -l
-#SBATCH --job-name=container-test		 
-#SBATCH --partition=lr5			 
-#SBATCH --account=ac_xxx		 
-#SBATCH --qos=lr_normal			
-#SBATCH --nodes=1			
-#SBATCH --time=1-2:0:0			
-```
 
 
 # Getting help
