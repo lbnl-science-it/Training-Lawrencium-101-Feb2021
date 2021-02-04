@@ -62,16 +62,16 @@ ssh $USER@lrc-login.lbl.gov
 - Followed by password prompt 
 ```
 $ password:
-
 ```
 - Enter your PIN followed by the one-time password from which your Google Authenticator app generates on your phone / tablet.
-** DO NOT run jobs on login nodes!! **
+- ** DO NOT run jobs on login nodes!! **
 
 # User Space
 ```
 /global/home/users/$USER
-- $Home: 10GB per user, backed up
+- Home: 10GB per user, backed up
 /global/scratch/$USER
+- scratch: shared, no backup, where to launch jobs
 /global/home/groups-sw
 /global/home/group
 /clusterfs/etna/
