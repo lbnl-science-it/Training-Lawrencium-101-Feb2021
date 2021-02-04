@@ -67,19 +67,15 @@ $ password:
 - ** DO NOT run jobs on login nodes!! **
 
 # User Space
-```
-/global/home/users/$USER
+ 
 - Home: 10GB per user, backed up
-/global/scratch/$USER
+`/global/home/users/$USER`
 - scratch: shared, no backup, where to launch jobs
-/global/home/groups-sw
-/global/home/group
-/clusterfs/etna/
-```
-- $Home: 10GB per user, backed up
-- scratch: shared, no backup, where to launch jobs
+`/global/scratch/$USER`
 - shared group space
+`/global/home/groups-sw  /global/home/group`
 - condo storage 
+`/clusterfs/etna/`
 
 # Data Transfer 
 
