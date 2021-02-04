@@ -211,45 +211,24 @@ Job Submission Script Example
 More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
 
 
-# Services (1)
+# Open Ondemand 
 
-- Designate data transfer node **lrc-xfer.lbl.gov**
-    - scp -r /your/source/file  $USER@lrc-xder.lbl.gov:/cluster/path
-    - rsync -avzh /your/source/file $USER @lrc-xfer.lbl.gov:/cluster/path
-- Globus Online provide secured unified interface for data transfer
-    - endpoint lbn#lrc, Globus Connect, AWS S3 connector
-- Visualization and remote desktop node **viz.lbl.gov**
-    - Detailed information [click here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/remote-desktop)
+- Single web point of entry to Lawrencium supercluster
+- Allow access to Lawrencium compute resources 
+- Supercomputer access 					
+  - File browser: file editing, data transfer
+  - Shell command line access - terminal
+- Monitor jobs
+- Interactive applications: Jupyter notebooks, MatLab, RStudio...
+  - Two partitions, 4 CPU nodes and 1 GPU node, for exploration
+  - Access to all Lawrencium partitions for computing jobs
+- Sever: [https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
+  - Intel Xeon Gold processor with 32 cores, 96 GB RAM
 
-[LRC Jupyterhub](https://lrc-jupyter.lbl.gov)
-<left><img src="figures/jupyter.png" width="60%"></left>
+# Open Ondemnd One-Minute Demo
 
-
-# Services (3): Cloud Computing
-
-- LBNL has a master payer program for cloud services on Amazon Web Services (AWS) and Google Cloud Platform (GCP).  
-* No charge to have an account in the program
-* Charges only for actual usage of cloud services like storage or compute
-* De-enrollment only changes the billing setup in your account, and your account will continue to be active.
-* Complete control of your own AWS or GCP dashboard, your data, tools, and services.
-
-# AWS & GCP Services 
-
-- AWS and GCP make discounts available to LBNL users.
-
-| Type | AWS | GCP |  |
-| --- | --- | --- | --- |
-| Overall | 7% | 13% | |
-| Data Egress | 15% | 25% | 
-
-- AWS, [restrictions apply](https://aws.amazon.com/blogs/publicsector/aws-offers-data-egress-discount-to-researchers/) 
-- Over 125 people at LBNL with cloud accounts on AWS and GCP.  
-- Mostly use virtual machines and storage, containers, ML, AI, and data visualization 
-- To set up a cloud account on either AWS or GCP, send email to [scienceit@lbl.gov](mailto:scienceit@lbl.gov)
-
-# Virtual Machine Services
-<left><img src="figures/vm.png" width="40%"></left>
-
+[https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
+ 
 
 # Getting help
 
