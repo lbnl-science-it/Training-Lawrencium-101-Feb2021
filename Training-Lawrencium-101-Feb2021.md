@@ -7,9 +7,9 @@
 - Orientation of Lawrencium supercluster
 - Access/login to clusters
 - Access software on the system
+- Data transfer to/from clusters
 - Job submission and monitoring
 - Open Ondemand with Jupyter notebooks
-- Data transfer to/from clusters
 - Remote visualization  
 
 
@@ -19,7 +19,7 @@
 - Help the scientists solve various problems  that positively impact the world.  
 - Lawrencium is a LBNL Condo Cluster Computing program
   - Significant investment from LBNL
-  - Individual PIs purchase nodes and storage
+  - Individual PIs purchasing nodes and storage
   - Computational cycles are shared among all lawrencium users
 
 
@@ -127,10 +127,17 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
 - Suite of software packages are available to user, e.g. compiler, libs...
 - Module is used to manage user environment to avoid clashes between incompatible software 
 ```  
-module purge*: clear user’s work environment
-module avail*: check available software packages
+module purge: clear user’s work environment
+module avail: check available software packages
 module load xxx*: load a package
-module list*: check currently loaded software 
+module list: check currently loaded software 
+```
+- Modules are arranged in a hierarchical fashion, some of the modules become available only after you load the parent module (e.g., MKL, FFT, and HDF5/NetCDF software is nested within the gcc module). 
+- Here's how to load MPI as an example
+```
+module load intel/2016.4.072
+module av
+module load mkl/2016.4.072 openmpi/3.0.1-intel
 ```
 - Users are allowed to install software in their home or group space
 - Learn more [environment modules](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
@@ -154,6 +161,7 @@ The basic workflow is:
   - the job will be running on a compute node, not the login node 
 
 ### Jub Submission
+
 #### Accounts, Partitions, QOS
  
 - Check slurm association, such as qos, account, partition
@@ -168,7 +176,7 @@ perceus-00|lr_test|wfeinstein|lr3|1||||||||||||lr_debug,lr_lowprio,lr_normal,te
 perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ```
 
-#### Other slurm usage
+#### Submit Jobs, Request Compute Nodes
 
 - Get help with the complete command options
 `sbatch --help`
@@ -225,30 +233,84 @@ More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-perfor
 - Sever: [https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
   - Intel Xeon Gold processor with 32 cores, 96 GB RAM
 
-# Open Ondemnd One-Minute Demo
+# Open Ondemnd One-Minute Demo Using Jupyter Notebooks
 
 [https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
  
+
+# Remote Visulization 
+
+- Allow users to run a real desktop within the cluster environment 
+- Allow applications with a GUI, commercial applications, debugger or visualization applications to render results. 
+- Allows users to disconnect/resume from anywhere without losing the work. 
+- RealVNC is provided as the remote desktop service, steps:
+  - Login to viz node (lrc-viz.lbl.gov)
+  - Start VNC service on viz node
+  - Start applications: Firefox, Jupyter notebooks, paraview ...
+  - Shut it down properly to release resource for other users (logout). Simply close the VNC Viewer does not clean the resource on the server
+- Detailed [instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/remote-desktop)
+
 
 # Getting help
 
 - Virtual Office Hours:
     - Time: 10:30am - noon (Wednesdays)
-    - Request [online](https://docs.google.com/forms/d/e/1FAIpQLScBbNcr0CbhWs8oyrQ0pKLmLObQMFmYseHtrvyLfOAoIInyVA/viewform)
+    - Online [request](https://docs.google.com/forms/d/e/1FAIpQLScBbNcr0CbhWs8oyrQ0pKLmLObQMFmYseHtrvyLfOAoIInyVA/viewform)
 - Sending us tickets at hpcshelp@lbl.gov
 - More information, documents, tips of how to use LBNL Supercluster [http://scs.lbl.gov/](http://scs.lbl.gov)
-- DLab consulting: [https://dlab.berkeley.edu/consulting](https://dlab.berkeley.edu/consulting)
 
-Please fill out [Training Survey](https://docs.google.com/forms/d/e/1FAIpQLSdrmW-7gZ8FankQwEceY6r_uXPmLHAuXFjDDfwu-86A1a0llg/viewform) to get your comments and help us improve.
+To improve our HPC traing and services, please fill out [Training Survey](https://docs.google.com/forms/d/e/1FAIpQLSdrmW-7gZ8FankQwEceY6r_uXPmLHAuXFjDDfwu-86A1a0llg/viewform)
 
 
-# Exercise
+# Hands-on Exercise
 
 - 1) Login  
 - 2) Data transfer
 - 3) Module load
-- 4) install python modules
+- 4) Install python modules
 - 5) Submit jobs
+
+
+# Login and Data Transfer
+
+Objective: transfer data to/from LRC 
+
+(1) Download test data [here](  ) 
+
+(2) Open two linux terminals on Mac or Window via Putty 
+
+(3) Transfer local data.sample to LRC on terminal 1 
+```
+scp -r data.sample $USER@lrc-xfer.lbl.gov:/global/home/users/$USER 
+scp -r data.sample $USER@lrc-xfer.lbl.gov:~
+``` 
+(4) On terminal 2, login to LRC
+``` 
+ssh $USER@lrc-login.lbl.gov 
+pwd 
+cat data.sample
+cp data.sample data.bak
+``` 
+(5) Transfer data from LRC to your local machine on terminal 1
+```
+scp -r $USER@lrc-xfer.lbl.gov:/global/home/users/$USER/data.bak .
+ls data.*
+```
+
+# Modules
+
+- Display software packages on LRC
+` module available`
+- Check modules in your env
+` module list`
+- Clear your env
+` module purge`
+- Load a module
+```
+ module load intel/2016.4.072
+ module list
+ module av
+```
 
 
 
