@@ -39,18 +39,18 @@
 
 [Detailed informaton of Lawrencium](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/lbnl-supercluster/lawrencium)
 
-# Getting access to Lawrencium
+# Getting Access to Lawrencium
 
 ### Three types of Project Accounts
 - Primary Investigator (PI) Computing Allowance (PCA) account: free 300K SUs per year (pc_xxx)
 - Condo account: PIs can purchage compute nodes to be added to the general pool, in exchage for their own priority access and share the Lawrencium infrastructure (lr_xxx)
 - Recharge account: pay as you go with minimal recharge rate ~ $0.01/SU (ac_xxx)
+- [Details](http://scs.lbl.gov/getting-an-account) 
 - PIs can add researchers/students working with them to get user accounts with access to the PCA/condo/recharge resources available to them
-  - User account request
-- User agreement consent
-[https://sites.google.com/a/lbl.gov/hpc/getting-an-account]([https://sites.google.com/a/lbl.gov/hpc/getting-an-account)
+  - User account [request](http://scs.lbl.gov/getting-an-account)
+  - User agreement [consent](http://scs.lbl.gov/getting-an-account)
 
-# Login
+### Login to Lawrencium Cluster
 - Linux terminal (command-line) session. 
 - Mac terminal (see Applications -> Utilities -> Terminal). 
 - Windows [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html).
@@ -67,8 +67,22 @@ $ password:
 - Enter your PIN followed by the one-time password from which your Google Authenticator app generates on your phone / tablet.
 ** DO NOT run jobs on login nodes!! **
 
-# Data Transfer
-- scp, rsync on lrc-xfer.lbl.gov
+# User Space
+```
+/global/home/users/$USER
+/global/scratch/$USER
+/global/home/groups-sw
+/global/home/group
+/clusterfs/etna/
+```
+- $Home: 10GB per user, backed up
+- scratch: shared, no backup, where to launch jobs
+- shared group space
+- condo storage 
+
+# Data Transfer on DTN 
+
+### scp/rsync on lrc-xfer.lbl.gov
 ```
 # On local machine transfer to Lawrencium
 scp file-xxx $USER@lrc-xfer.lbl.gov:/global/home/users/$USER
@@ -77,7 +91,7 @@ scp -r dir-xxx $USER@lrc-xfer.lbl.gov:/global/scratch/$USER
 # On Local machine transfer from Lawrencium
 scp $USER@lrc-xfer.lbl.gov:/global/scratch/$USER/file-xxx ~/Desktop
 
-# Transfer to another institute
+# Transfer from Lawrencium to Another Institute
 ssh $USER@lrc-xfer.lbl.gov
 scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
 ```
@@ -85,7 +99,7 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
   - [WinSCP](https://winscp.net/eng/index.php)
   - [FileZella](https://filezilla-project.org/): multi-platform program via SFTP
 
-# Globus Data Transfer
+### Globus Data Transfer
 - Transfer data faster and unattended between endpoints, see [instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/data-transfer)
 - Possible endpoints include: lbnl#lrc, your laptop/desktop, NERSC, among others.
 - Transfer data to/from your laptop (endpoint setup):
@@ -94,7 +108,6 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
  - Globus Connect Pesonal actively running on your machine. 
 
 <left><img src="figures/globus.jpg" width="70%"></left>
-- 
 
 # Softwre Module Farm 
 
