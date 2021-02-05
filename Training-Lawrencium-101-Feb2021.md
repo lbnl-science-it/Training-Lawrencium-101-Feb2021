@@ -139,8 +139,23 @@ module load intel/2016.4.072
 module av
 module load mkl/2016.4.072 openmpi/3.0.1-intel
 ```
-- Users are allowed to install software in their home or group space
 - Learn more [environment modules](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
+- Users are allowed to install software in their home or group space
+
+
+# Install Python Modules 
+
+- Users don't have admin rights, most software can be installed  --prefix=/dir/to/your/path
+- Python modules: abundantly available but cannot be installed in the default location without admin rights.
+```
+[wfeinstein@n0000 ~]$ module available python
+--------------------- /global/software/sl-7.x86_64/modfiles/langs -----------------------------------
+python/2.7          python/3.5          python/3.6(default) python/3.7          python/3.7.6        python/3.8.2-dll
+```
+- pip install --user package_name: 
+- pip install --install-option="--prefix=$HOME/local" package_name
+- python setup.py install –home=/home/user/package_dir
+- export PYTHONPATH=
 
 
 # SLURM: Resource Manager & Job Scheduler
@@ -275,23 +290,23 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 
 Objective: transfer data to/from LRC 
 
-(1) Download test data [here](  ) 
+1) Download test data [here](  ) 
 
-(2) Open two linux terminals on Mac or Window via Putty 
+2) Open two linux terminals on Mac or Window via Putty 
 
-(3) Transfer local data.sample to LRC on terminal 1 
+3) Transfer local data.sample to LRC on terminal 1 
 ```
 scp -r data.sample $USER@lrc-xfer.lbl.gov:/global/home/users/$USER 
 scp -r data.sample $USER@lrc-xfer.lbl.gov:~
 ``` 
-(4) On terminal 2, login to LRC
+4) On terminal 2, login to LRC
 ``` 
 ssh $USER@lrc-login.lbl.gov 
 pwd 
 cat data.sample
 cp data.sample data.bak
 ``` 
-(5) Transfer data from LRC to your local machine on terminal 1
+5) Transfer data from LRC to your local machine on terminal 1
 ```
 scp -r $USER@lrc-xfer.lbl.gov:/global/home/users/$USER/data.bak .
 ls data.*
