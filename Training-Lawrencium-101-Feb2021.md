@@ -276,8 +276,9 @@ There are two large memory nodes 1.5TB in lr6
 ### Request GPU node(s)
 
 - --gres=gpu:type:count
-`srun -A your_acct -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash`
 ```
+srun -A your_acct -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash
+
 [wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
 [wfeinstein@n0002 ~]$ nvidia-smi
 Sat Feb  6 07:18:40 2021       
