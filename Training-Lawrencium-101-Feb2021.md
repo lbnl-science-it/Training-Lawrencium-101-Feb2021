@@ -87,7 +87,7 @@ $ password:
 - Global scratch: shared, no backup, where to launch jobs
 `/global/scratch/$USER/`
 - Shared group space
-- `/global/home/groups-sw/  200GB backups
+- /global/home/groups-sw/  200GB backups
 - /global/home/group/` 400GB no backup
 - Condo storage 
 `e.g. /clusterfs/etna/`
@@ -107,22 +107,23 @@ scp $USER@lrc-xfer.lbl.gov:/global/scratch/$USER/file-xxx ~/Desktop
 # Transfer from Lawrencium to Another Institute
 ssh $USER@lrc-xfer.lbl.gov   # DTN
 scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
-```
-rsync: a better data transfer tool with regular backups
-`rsync -avpz file-at-local $USER@lrc-xfer.lbl.gov:/global/home/user/$USER`
 
+rsync: a better data transfer tool with regular backups
+rsync -avpz file-at-local $USER@lrc-xfer.lbl.gov:/global/home/user/$USER
+```
 - On Window
   - [WinSCP](https://winscp.net/eng/index.php): SFTP client and FTP client for Microsoft Windows
   - [FileZella](https://filezilla-project.org/): multi-platform program via SFTP
 
-### Data Transfer using Globus
+### Data Transfer with Globus
 
 - Transfer data faster and unattended between endpoints, see [instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/data-transfer)
+- Berkeley Lab users can use Globus to access and transfer files in/out of their Berkeley Lab Google drive also. Details on how to access LBL Google drive via Globus can be found [here](https://commons.lbl.gov/display/itdivision/GDrive+Access+Via+Globus) (LBL Only). 
 - Possible endpoints include: lbnl#lrc, your laptop/desktop, NERSC, among others.
 - Transfer data to/from your laptop (endpoint setup):
- - Globus Connect Personal [set up](https://www.globus.org/globus-connect-personal)
- - Your machine established as an endpoint
- - Globus Connect Pesonal actively running on your machine. 
+   - Creat an endpoint for your machine 
+   - Globus Connect Personal [set up](https://www.globus.org/globus-connect-personal)
+   - Globus Connect Pesonal actively running on your machine. 
 
 <left><img src="figures/globus.jpg" width="70%"></left>
 
