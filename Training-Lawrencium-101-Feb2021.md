@@ -568,9 +568,9 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 
 # Hands-on Exercise
 
-- 1) Login and data transfer
-- 2) Module load
-- 3) Submit jobs
+1) Login and data transfer
+2) Module load
+3) Submit jobs
 
 
 # Login and Data Transfer
