@@ -186,15 +186,14 @@ The basic workflow is:
   - when your job starts, the working directory will be the one from which the job was submitted
   - the job will be running on a compute node, not the login node 
 
-### Jub Submission
-
-#### Accounts, Partitions, QOS (Quality of Service)
+#### Accounts, Partitions, Quality of Service (QOS)
  
 - Check slurm association, such as qos, account, partition
 
 `sacctmgr show association user=wfeinstein -p`
 
 ```
+Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
 perceus-00|scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
@@ -205,15 +204,15 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ```
 
 
-# Submit an Interactive Job
+# Job Submission
+
+## Submit an Interactive Job
 
 Commonly used for code debugging, testing, monitoring
 - srun: Add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
-```
-srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash
+`srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash`
 or
-srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash
-```
+`srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash`
 - salloc : functions similarly srun --pty bash. however when the allocation starts, a new bash session will start up on the login node
 ```
 [wfeinstein@n0003 ~]$ salloc --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal
@@ -238,7 +237,7 @@ python my.py >& mypy.out
 ```
 
 
-# Submit a Batch Job
+## Submit a Batch Job
 
 - Get help with the complete command options
 `sbatch --help`
