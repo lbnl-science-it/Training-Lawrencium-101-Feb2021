@@ -127,10 +127,10 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
 
 - Commonly used compiler, software tools provided to all cluster users
 - Maintained on a centralized storage device and mounted as read-only NFS file system
-  - Compilers: intel, gcc, MPI compilers, Python
-  - Tools: matlab, singularity, cuda
-  - Applications: machine learning, QChem, MD, cp2k
-  - Libraries: fftw, lapack
+   - Compilers: intel, gcc, MPI compilers, Python
+   - Tools: matlab, singularity, cuda
+   - Applications: machine learning, QChem, MD, cp2k
+   - Libraries: fftw, lapack
 - Module: framework to manage users’ software environment 
 - Setup user environment: PATH, LD_LIBRARY_PATH…
 
