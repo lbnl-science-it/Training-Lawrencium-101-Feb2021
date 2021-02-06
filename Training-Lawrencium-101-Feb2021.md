@@ -2,6 +2,7 @@
 % February 11, 2021
 % Wei Feinstein
 
+
 # Outline
 
 - Orientation of Lawrencium supercluster
@@ -11,6 +12,8 @@
 - Job submission and monitoring
 - Open Ondemand with Jupyter notebooks
 - Remote visualization  
+
+Slides can be found on github [here](https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021)
 
 
 # Lawrencium Cluster Overview
@@ -199,7 +202,7 @@ perceus-00|pc_test|wfeinstein|lr_bigmem|1||||||||||||lr_debug,lr_lowprio,lr_norm
 perceus-00|lr_test|wfeinstein|lr3|1||||||||||||condo_test|||
 perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ...
-```
+
 
 #### Submit Jobs, Request Compute Nodes
 
@@ -240,6 +243,9 @@ Compute nodes have various hardware within a SLURM partition
 - --constrain flag   
 ```
 [wfeinstein@n0000 ~]$ srun --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal --constrain=lr6_sky --pty bash
+[wfeinstein@n0081 ~]$ lscpu |egrep '^CPU\(s\):|Model name'
+CPU(s):                32
+Model name:            Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz
 [wfeinstein@n0081 ~]$ free -h
               total        used        free      shared  buff/cache   available
 Mem:            93G        2.2G         83G        3.1G        7.4G         87G
@@ -258,7 +264,13 @@ Swap:          8.0G        1.5G        6.5G
 Memeory speicification when using shared partition:
 - Most Lawrencium partitions are exclusive: compute node belongs to one user
 - Some condo accounts or departmental clusters, such as etna, each compute node can be shared by multiple users   
-- --memory 
+- --ntaks=1 --mem=4700 (1 core on a 192GB RAM node)
+- --ntaks=2 --mem=9200 (2 core on a 192GB RAM node)
+- --ntaks=1 --mem=4700 (1 core on a 96GB RAM node)
+- --ntaks=2 --mem=9200 (2 core on a 96GB RAM node) 
+
+There are two large memory nodes 1.5TB in lr6
+- --partition=lr_bigmem
 
 
 ### Request GPU node(s)
@@ -316,12 +328,35 @@ Job Submission Script Example
 
 ```
 #!/bin/bash -l
-#SBATCH --job-name=container-test
-#SBATCH --partition=lr5
-#SBATCH --account=ac_xxx
+
+# Job name:
+#SBATCH --job-name=mytest
+#
+# Partition:
+#SBATCH --partition=lr6
+#
+# Account:
+#SBATCH --account=scs
+#
+# qos:
 #SBATCH --qos=lr_normal
+#
+# Wall clock time:
+#SBATCH --time=1:00:00
+#
+# Node count
 #SBATCH --nodes=1
-#SBATCH -
+#
+# Node feature
+#SBATCH --constrain=lr6_cas
+#
+# cd to your dir
+cd /your/dir
+
+## Commands to run
+module load python/3.7
+python my.py >& mypy.out 
+
 ````
 
 # Monitoring Jobs
