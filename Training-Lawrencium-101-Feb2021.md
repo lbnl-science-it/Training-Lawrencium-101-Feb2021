@@ -192,7 +192,7 @@ The basic workflow is:
 `sacctmgr show association user=wfeinstein -p`
 
 ```
-perceus-00|ac_test|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
+perceus-00|scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr_bigmem|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
@@ -227,15 +227,44 @@ salloc: Nodes n0101.lr6 are ready for job
 [wfeinstein@n0101 ~]$ hostname
 n0101.lr6
 ```
-- More flags
-  - Specify node type --constrain (-C)
-  - Memeory contrain for shared cluster: --memory
+
+
+### Node Features 
+
+Compute nodes have various hardware within a SLURM partition
+  - lr6_sky
+  - lr6_cas
+  - lr6_cas,lr6_m192
+  - lr6_sky,lr6_m192 
+- Wait time for the resouces typically is longer
+- --constrain flag   
+```
+[wfeinstein@n0000 ~]$ srun --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal --constrain=lr6_sky --pty bash
+[wfeinstein@n0081 ~]$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:            93G        2.2G         83G        3.1G        7.4G         87G
+Swap:          8.0G          0B        8.0G
+[wfeinstein@n0081 ~]$ exit
+exit
+[wfeinstein@n0000 ~]$ srun --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal --constrain=lr6_sky,lr6_m192 --pty bash
+[wfeinstein@n0023 ~]$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           187G        2.6G        172G        1.7G         12G        182G
+Swap:          8.0G        1.5G        6.5G
+
+```
+- Features can be found [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/lbnl-supercluster/lawrencium)
+
+Memeory speicification when using shared partition:
+- Most Lawrencium partitions are exclusive: compute node belongs to one user
+- Some condo accounts or departmental clusters, such as etna, each compute node can be shared by multiple users   
+- --memory 
 
 
 ### Request GPU node(s)
 
-- --gres=
-`srun -A your_acct -N 1 -P es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash`
+- --gres=gpu:type:count
+`srun -A your_acct -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash`
 ```
 [wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
 [wfeinstein@n0002 ~]$ nvidia-smi
@@ -272,19 +301,13 @@ n0002.es1
   - V100 --gres=gpu:V100:1 
   - GTX1080TI --gres=gpu:GTX1080TI:1 
   - GTX1080TI --gres=gpu:GRTX2080TI:1
-``` 
-srun -A scs -N 1 -p es1 --gres=gpu:GTX1080TI:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
+`srun -A scs -N 1 -p es1 --gres=gpu:GTX1080TI:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash`
 ```
 [wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:V100:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
 [wfeinstein@n0013 ~]$ nvidia-smi -L
 GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-51ae41ef-04ac-1ca6-90a7-bd99c6b503bf)
 GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-40c3447f-52d8-164f-978b-55998db3e6ad)
 ```
-- 
- 
-- More flags
-  - Specify node type --constrain (-C)
-  - Memeory contrain for shared cluster: --memory
 
 
 # Submitting a Batch Job 
