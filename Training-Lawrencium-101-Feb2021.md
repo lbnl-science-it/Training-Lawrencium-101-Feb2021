@@ -118,7 +118,7 @@ rsync -avpz file-at-local $USER@lrc-xfer.lbl.gov:/global/home/user/$USER
 ### Data Transfer with Globus
 
 - Transfer data faster and unattended between endpoints, see [instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/data-transfer)
-- Berkeley Lab users can use Globus to access and transfer files in/out of their Berkeley Lab Google drive also. Details on how to access LBL Google drive via Globus can be found [here](https://commons.lbl.gov/display/itdivision/GDrive+Access+Via+Globus) (LBL Only). 
+- Berkeley Lab users can use Globus to access and transfer files in/out of their Berkeley Lab Google drive also. Details on how to access LBL Google drive via Globus can be found [here](https://commons.lbl.gov/display/itdivision/GDrive+Access+Via+Globus)
 - Possible endpoints include: lbnl#lrc, your laptop/desktop, NERSC, among others.
 - Transfer data to/from your laptop (endpoint setup):
    - Creat an endpoint for your machine 
@@ -552,7 +552,7 @@ More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-perfor
   - Start VNC service on viz node
   - Start applications: Firefox, Jupyter notebooks, paraview ...
   - Shut it down properly to release resource for other users (logout). Simply close the VNC Viewer does not clean the resource on the server
-- Detailed [instructions](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/remote-desktop)
+- Refer to the detailed instructions [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/remote-desktop)
 
 
 # Getting help
@@ -568,10 +568,9 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 
 # Hands-on Exercise
 
-- 1) Login  
-- 2) Data transfer
-- 3) Module load
-- 4) Submit jobs
+- 1) Login and data transfer
+- 2) Module load
+- 3) Submit jobs
 
 
 # Login and Data Transfer
@@ -601,7 +600,7 @@ ls data.*
 ```
 
 
-# Modules
+# Module Commands
 
 - Display software packages on LRC
 ` module available`
@@ -628,7 +627,5 @@ perceus-00|scs|wfeinstein|lr6|1|||||||||||||lr6_lowprio,lr_debug,lr_normal|||
 perceus-00|scs|wfeinstein|es1|1|||||||||||||es_debug,es_lowprio,es_normal|||
 
 ```
--   
-- 
 
 
