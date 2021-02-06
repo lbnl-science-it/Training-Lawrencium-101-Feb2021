@@ -54,7 +54,7 @@ Slides can be found on github from [here](https://github.com/lbnl-science-it/Tra
 - Primary Investigator (PI) Computing Allowance (PCA) account: free 300K SUs per year (pc_xxx)
 - Condo account: PIs can purchage compute nodes to be added to the general pool, in exchage for their own priority access and share the Lawrencium infrastructure (lr_xxx)
 - Recharge account: pay as you go with minimal recharge rate ~ $0.01/SU (ac_xxx)
-- [Details](http://scs.lbl.gov/getting-an-account) 
+- Details about project accounts can be found [here](http://scs.lbl.gov/getting-an-account) 
 - PIs can add researchers/students working with them to get user accounts with access to the PCA/condo/recharge resources available to them
 
 ### User accounts
@@ -86,8 +86,9 @@ $ password:
 `/global/home/users/$USER/`
 - Global scratch: shared, no backup, where to launch jobs
 `/global/scratch/$USER/`
-- shared group space
-`/global/home/groups-sw/  /global/home/group/`
+- Shared group space
+- `/global/home/groups-sw/  200GB backups
+- /global/home/group/` 400GB no backup
 - Condo storage 
 `e.g. /clusterfs/etna/`
 
