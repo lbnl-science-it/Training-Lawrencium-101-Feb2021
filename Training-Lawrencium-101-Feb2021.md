@@ -321,7 +321,7 @@ There are two large memory nodes 1.5TB in lr6
 
 # Submit a Job to GPU cluster (es1)
 
-### Interactively
+### Interactive Job
 - --gres=gpu:type:GPU#
 - --ntasks=CPU_CORE#
 - Note: Ratio of CPU_CORE#:GPU# = 2:1
@@ -375,13 +375,13 @@ Job Submission Script Example
 #!/bin/bash -l
 
 #SBATCH --job-name=mytest
-#SBATCH --partition=**es1**
+#SBATCH --partition=es1         ## es1 GPU partition
 #SBATCH --account=scs
 #SBATCH --qos=lr_normal
 #SBATCH --time=1:00:00
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:GTX1080TI:2
-#SBATCH --ntasks=4
+#SBATCH --gres=gpu:GTX1080TI:2  ## GPU cards
+#SBATCH --ntasks=4              ## CPU cores
 #
 cd /your/dir
 
