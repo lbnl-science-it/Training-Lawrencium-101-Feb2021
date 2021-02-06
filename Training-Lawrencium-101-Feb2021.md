@@ -204,14 +204,52 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ...
 ```
 
-#### Submit Jobs, Request Compute Nodes
+# Submit a Batch Job
 
 - Get help with the complete command options
 `sbatch --help`
 - sbatch: submit a job to the batch queue system
 `sbatch myjob.sh`
-- srun: add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
-- Commonly used for code debugging, testing, monitoring
+
+Job Submission Script Example - myjob.sh 
+
+```
+#!/bin/bash -l
+
+# Job name:
+#SBATCH --job-name=mytest
+#
+# Partition:
+#SBATCH --partition=lr6
+#
+# Account:
+#SBATCH --account=scs
+#
+# qos:
+#SBATCH --qos=lr_normal
+#
+# Wall clock time:
+#SBATCH --time=1:00:00
+#
+# Node count
+#SBATCH --nodes=1
+#
+# Node feature
+#SBATCH --constrain=lr6_cas
+#
+# cd to your work directory
+cd /your/dir
+
+## Commands to run
+module load python/3.7
+python my.py >& mypy.out 
+````
+
+
+# Submit an Interactive Job
+
+Commonly used for code debugging, testing, monitoring
+- srun: Add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
 ```
 srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash
 or
@@ -229,6 +267,15 @@ salloc: Nodes n0101.lr6 are ready for job
 [wfeinstein@n0003 ~]$ ssh n0101.lr6
 [wfeinstein@n0101 ~]$ hostname
 n0101.lr6
+```
+Once you are on the node, run your commands or application
+```
+# cd to your work directory
+cd /your/dir
+
+## Commands to run
+module load python/3.7
+python my.py >& mypy.out
 ```
 
 
@@ -257,7 +304,6 @@ exit
               total        used        free      shared  buff/cache   available
 Mem:           187G        2.6G        172G        1.7G         12G        182G
 Swap:          8.0G        1.5G        6.5G
-
 ```
 - Features can be found [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/lbnl-supercluster/lawrencium)
 
@@ -273,32 +319,30 @@ There are two large memory nodes 1.5TB in lr6
 - --partition=lr_bigmem
 
 
-### Request GPU node(s)
+# Submit a Job to GPU cluster (es1)
 
-- --gres=gpu:type:count
+### Interactively
+- --gres=gpu:type:GPU#
+- --ntasks=CPU_CORE#
+- Note: Ratio of CPU_CORE#:GPU# = 2:1
 ```
 srun -A your_acct -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash
 
 [wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
-[wfeinstein@n0002 ~]$ nvidia-smi
-Sat Feb  6 07:18:40 2021       
+[wfeinstein@n0019 ~]$ nvidia-smi
+[wfeinstein@n0019 ~]$ nvidia-smi
+Sat Feb  6 10:13:25 2021       
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 440.44       Driver Version: 440.44       CUDA Version: 10.2     |
 |-------------------------------+----------------------+----------------------+
 | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
 | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
 |===============================+======================+======================|
-|   0  GeForce GTX 108...  Off  | 00000000:02:00.0 Off |                  N/A |
-| 32%   49C    P0    63W / 250W |      0MiB / 11178MiB |      0%      Default |
+|   0  Tesla V100-SXM2...  Off  | 00000000:62:00.0 Off |                    0 |
+| N/A   45C    P0    53W / 300W |      0MiB / 16160MiB |      0%      Default |
 +-------------------------------+----------------------+----------------------+
-|   1  GeForce GTX 108...  Off  | 00000000:03:00.0 Off |                  N/A |
-| 23%   39C    P0    61W / 250W |      0MiB / 11178MiB |      0%      Default |
-+-------------------------------+----------------------+----------------------+
-|   2  GeForce GTX 108...  Off  | 00000000:81:00.0 Off |                  N/A |
-| 23%   38C    P0    54W / 250W |      0MiB / 11178MiB |      0%      Default |
-+-------------------------------+----------------------+----------------------+
-|   3  GeForce GTX 108...  Off  | 00000000:82:00.0 Off |                  N/A |
-| 21%   37C    P0    59W / 250W |      0MiB / 11178MiB |      3%      Default |
+|   1  Tesla V100-SXM2...  Off  | 00000000:89:00.0 Off |                    0 |
+| N/A   45C    P0    55W / 300W |      0MiB / 16160MiB |      0%      Default |
 +-------------------------------+----------------------+----------------------+
                                                                                
 +-----------------------------------------------------------------------------+
@@ -307,71 +351,98 @@ Sat Feb  6 07:18:40 2021
 |=============================================================================|
 |  No running processes found                                                 |
 +-----------------------------------------------------------------------------+
-[wfeinstein@n0002 ~]$ hostname
-n0002.es1
+[wfeinstein@n0019 ~]$ hostname
+n0019.es1
 ```
 - Specify GPU type
   - V100 --gres=gpu:V100:1 
   - GTX1080TI --gres=gpu:GTX1080TI:1 
   - GTX1080TI --gres=gpu:GRTX2080TI:1
-`srun -A scs -N 1 -p es1 --gres=gpu:GTX1080TI:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash`
 ```
-[wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:V100:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
-[wfeinstein@n0013 ~]$ nvidia-smi -L
-GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-51ae41ef-04ac-1ca6-90a7-bd99c6b503bf)
-GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-40c3447f-52d8-164f-978b-55998db3e6ad)
+[wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:GTX1080TI:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
+[wfeinstein@n0002 ~]$ nvidia-smi -L
+GPU 0: GeForce GTX 1080 Ti (UUID: GPU-e15de6ae-dbbd-8fca-c888-be2bc9d9b519)
+GPU 1: GeForce GTX 1080 Ti (UUID: GPU-55e97cf5-0388-2539-4577-5d940d83fa2f)
+GPU 2: GeForce GTX 1080 Ti (UUID: GPU-e5c71e18-25a6-523c-34b2-0c0cb448acb8)
+GPU 3: GeForce GTX 1080 Ti (UUID: GPU-fa31d967-ffe0-d500-e7eb-25e1349c8b05)```
 ```
 
-
-# Submitting a Batch Job 
+## A Batch GPU Job 
 
 Job Submission Script Example 
 
 ```
 #!/bin/bash -l
 
-# Job name:
 #SBATCH --job-name=mytest
-#
-# Partition:
-#SBATCH --partition=lr6
-#
-# Account:
+#SBATCH --partition=**es1**
 #SBATCH --account=scs
-#
-# qos:
 #SBATCH --qos=lr_normal
-#
-# Wall clock time:
 #SBATCH --time=1:00:00
-#
-# Node count
 #SBATCH --nodes=1
+#SBATCH --gres=gpu:GTX1080TI:2
+#SBATCH --ntasks=4
 #
-# Node feature
-#SBATCH --constrain=lr6_cas
-#
-# cd to your dir
 cd /your/dir
 
 ## Commands to run
 module load python/3.7
 python my.py >& mypy.out 
-
 ````
 
 # Monitoring Jobs
 
 - sinfo: check status of partitions and nodes (idle, allocated, drain, down) 
-`sinfo –r –p lr6`
+```
+sinfo –r –p lr5
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST 
+lr5          up   infinite      3 drain* n0004.lr5,n0032.lr5,n0169.lr5 
+lr5          up   infinite      2  down* n0112.lr5,n0118.lr5 
+lr5          up   infinite     58  alloc n0000.lr5,n0001.lr5,n0002.lr5,n0003.lr5,n0006.lr5,n0009.lr5
+lr5          up   infinite    115   idle n0005.lr5,n0007.lr5,n0008.lr5
+lr5          up   infinite     14   down n0048.lr5,n0050.lr5,n0054.lr5
+...
+```
 - squeue: check jobs in the batch queuing system (R or PD)
-`squeue –u $USER`
+```
+squeue –u $USER
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON) 
+          28757187       lr6     bash wfeinste  R       0:09      1 n0215.lr6 
+```
 - sacct: check job information or history
-`sacct -X -o 'jobid,user,partition,nodelist,stat'`
+```
+sacct -X -o 'jobid,user,partition,nodelist,stat'
+       JobID      User  Partition        NodeList      State 
+------------ --------- ---------- --------------- ---------- 
+28755594     wfeinste+        lr5       n0192.lr5  COMPLETED 
+28755597     wfeinste+        lr6       n0101.lr6  COMPLETED 
+28755598     wfeinste+        lr5       n0192.lr5  COMPLETED 
+28755604     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
+28755693     wfeinste+        lr6       n0101.lr6 CANCELLED+ 
+28755890     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
+28755904     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
+28755910     wfeinste+        lr5       n0192.lr5  COMPLETED 
+....
+```
+- wwall -j <JOB_ID>
+```
+[wfeinstein@n0000 ~]$ wwall -j 28757187
+--------------------------------------------------------------------------------
+Total CPU utilization: 0%                          
+          Total Nodes: 1         
+               Living: 1                           Warewulf
+          Unavailable: 0                      Cluster Statistics
+             Disabled: 0                 http://warewulf.lbl.gov/
+                Error: 0         
+                 Dead: 0         
+--------------------------------------------------------------------------------
+ Node      Cluster        CPU       Memory (MB)      Swap (MB)      Current
+ Name       Name       [util/num] [% used/total]   [% used/total]   Status
+n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY
+```
+More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
 - scancel : cancel a job
 `scancel jobID`
-
-More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
 
 
 # Open Ondemand 
