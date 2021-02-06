@@ -184,9 +184,8 @@ Successfully installed ml-python-2.2
 [wfeinstein@n0000 ~]$ export PYTHONPATH=~/.local/lib/python3.7/site-packages:$PYTHONPATH
 
 - pip install --install-option="--prefix=$HOME/.local" package_name
-- Install from souce code after download the code 
-- python setup.py install –home=/home/user/package_dir
-- Creat a virutal environment: python3 -m venv my_env 
+- python setup.py install –home=/home/user/package_dir: install from souce code after download the code
+- python3 -m venv my_env: creat a virutal environment 
  
 
 # SLURM: Resource Manager & Job Scheduler
@@ -223,15 +222,17 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ...
 ```
 
-
 # Job Submission
 
 ## Submit an Interactive Job
 
 Commonly used for code debugging, testing, monitoring
 - srun: Add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
+
 `srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash`
+
 or
+
 `srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash`
 - salloc : functions similarly srun --pty bash. however when the allocation starts, a new bash session will start up on the login node
 ```
@@ -570,7 +571,8 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 
 1) Login and data transfer
 2) Module load
-3) Submit jobs
+3) Edit files
+4) Submit jobs
 
 
 # Login and Data Transfer
@@ -615,6 +617,16 @@ ls data.*
  module av
 ```
 
+# Editing files
+
+Linxu editor: vim, emacs, and nano installed. Just start the editor from a login node.
+```
+## To use vim
+vim myfile.txt
+## To use emacs
+emacs myfile.txt
+```
+
 
 # Job Submission
 
@@ -627,5 +639,47 @@ perceus-00|scs|wfeinstein|lr6|1|||||||||||||lr6_lowprio,lr_debug,lr_normal|||
 perceus-00|scs|wfeinstein|es1|1|||||||||||||es_debug,es_lowprio,es_normal|||
 
 ```
+
+### Request an interactive node
+
+Note: Use your account, partition, qos
+
+srun --account=ac_xxx --nodes=1 --partition=xxx --time=1:0:0 --qos=xxx --pty bash
+
+
+### Submit a batch job
+
+Note: Use your account, partition, qos
+```
+#!/bin/bash -l
+
+# Job name:
+#SBATCH --job-name=mytest
+#
+# Partition:
+#SBATCH --partition=lr6
+#
+# Account:
+#SBATCH --account=scs
+#
+# qos:
+#SBATCH --qos=lr_normal
+#
+# Wall clock time:
+#SBATCH --time=1:00:00
+#
+# Node count
+#SBATCH --nodes=1
+#
+# Node feature
+#SBATCH --constrain=lr6_cas
+#
+# cd to your work directory
+cd /your/dir
+
+## Commands to run
+module load python/3.7
+python my.py >& mypy.out 
+````
 
 
