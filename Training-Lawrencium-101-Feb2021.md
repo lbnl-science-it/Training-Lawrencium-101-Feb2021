@@ -131,12 +131,12 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
    - Tools: matlab, singularity, cuda
    - Applications: machine learning, QChem, MD, cp2k
    - Libraries: fftw, lapack
-- Module: framework to manage users’ software environment 
-- Setup user environment: PATH, LD_LIBRARY_PATH…
+- Environment Modules: framework to manage users’ software environment dynamically 
+- Properly set up PATH, LD_LIBRARY_PATH…
+- Avoid clashes between incompatible software
 
-### Module commands
+### Command line tool Module 
 
-- Module is used to manage user environment to avoid clashes between incompatible software 
 ```  
 module purge: clear user’s work environment
 module avail: check available software packages
@@ -150,24 +150,39 @@ module load intel/2016.4.072
 module av
 module load mkl/2016.4.072 openmpi/3.0.1-intel
 ```
-- Learn more [environment modules](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
+- You can learn more environment modules from [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
 - Users are allowed to install software in their home or group space
 
 
 # Install Python Modules 
 
-- Users don't have admin rights, most software can be installed  --prefix=/dir/to/your/path
+- Users don't have admin rights, but most software can be installed  --prefix=/dir/to/your/path
 - Python modules: abundantly available but cannot be installed in the default location without admin rights.
+- pip install --user package_name
+- export PYTHONPATH
 ```
 [wfeinstein@n0000 ~]$ module available python
 --------------------- /global/software/sl-7.x86_64/modfiles/langs -----------------------------------
 python/2.7          python/3.5          python/3.6(default) python/3.7          python/3.7.6        python/3.8.2-dll
 ```
-- pip install --user package_name: 
-- pip install --install-option="--prefix=$HOME/local" package_name
-- python setup.py install –home=/home/user/package_dir
-- export PYTHONPATH=
+[wfeinstein@n0000 ~]$ module load python/3.7
 
+[wfeinstein@n0000 ~]$ python3 -m site --user-site
+/global/home/users/wfeinstein/.local/lib/python3.7/site-packages
+
+[wfeinstein@n0000 ~]$ pip install --user ml-python
+...
+Successfully built ml-python
+Installing collected packages: ml-python
+Successfully installed ml-python-2.2
+
+[wfeinstein@n0000 ~]$ export PYTHONPATH=~/.local/lib/python3.7/site-packages:$PYTHONPATH
+
+- pip install --install-option="--prefix=$HOME/.local" package_name
+- Install from souce code after download the code 
+- python setup.py install –home=/home/user/package_dir
+- Creat a virutal environment: python3 -m venv my_env 
+ 
 
 # SLURM: Resource Manager & Job Scheduler
 
