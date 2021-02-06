@@ -204,6 +204,40 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 ...
 ```
 
+
+# Submit an Interactive Job
+
+Commonly used for code debugging, testing, monitoring
+- srun: Add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
+```
+srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash
+or
+srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash
+```
+- salloc : functions similarly srun --pty bash. however when the allocation starts, a new bash session will start up on the login node
+```
+[wfeinstein@n0003 ~]$ salloc --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal
+salloc: Granted job allocation 28755918
+salloc: Waiting for resource configuration
+salloc: Nodes n0101.lr6 are ready for job
+[wfeinstein@n0003 ~]$ squeue -u wfeinstein
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON) 
+          28755918       lr6     bash wfeinste  R       0:14      1 n0101.lr6 
+[wfeinstein@n0003 ~]$ ssh n0101.lr6
+[wfeinstein@n0101 ~]$ hostname
+n0101.lr6
+```
+Once you are on the node, run your commands or application
+```
+# cd to your work directory
+cd /your/dir
+
+## Commands to run
+module load python/3.7
+python my.py >& mypy.out
+```
+
+
 # Submit a Batch Job
 
 - Get help with the complete command options
@@ -244,39 +278,6 @@ cd /your/dir
 module load python/3.7
 python my.py >& mypy.out 
 ````
-
-
-# Submit an Interactive Job
-
-Commonly used for code debugging, testing, monitoring
-- srun: Add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
-```
-srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash
-or
-srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash
-```
-- salloc : functions similarly srun --pty bash. however when the allocation starts, a new bash session will start up on the login node
-```
-[wfeinstein@n0003 ~]$ salloc --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal
-salloc: Granted job allocation 28755918
-salloc: Waiting for resource configuration
-salloc: Nodes n0101.lr6 are ready for job
-[wfeinstein@n0003 ~]$ squeue -u wfeinstein
-             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON) 
-          28755918       lr6     bash wfeinste  R       0:14      1 n0101.lr6 
-[wfeinstein@n0003 ~]$ ssh n0101.lr6
-[wfeinstein@n0101 ~]$ hostname
-n0101.lr6
-```
-Once you are on the node, run your commands or application
-```
-# cd to your work directory
-cd /your/dir
-
-## Commands to run
-module load python/3.7
-python my.py >& mypy.out
-```
 
 
 ### Node Features 
@@ -321,7 +322,7 @@ There are two large memory nodes 1.5TB in lr6
 
 ## Submit a Job to GPU cluster (es1)
 
-### Interactive Jobs
+### Interactive GPU Jobs
 
 - --gres=gpu:type:GPU#
 - --ntasks=CPU_CORE#
@@ -422,7 +423,7 @@ mpirun -np 80 ./a.out        ## your MPI application
 ````
 
 
-### Submit Serial Tasks in Parallel (GNU Parallel) 
+### Submit Tasks in Parallel (GNU Parallel) 
 
 GNU Parallel is a shell tool for executing jobs in parallel on one or multiple computers. 
 - A job can be a single core serial task, multi-core or MPI application. 
