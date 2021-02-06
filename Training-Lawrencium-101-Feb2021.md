@@ -25,10 +25,7 @@ Slides can be found on github from [here](https://github.com/lbnl-science-it/Tra
   - Individual PIs purchasing nodes and storage
   - Computational cycles are shared among all lawrencium users
 
-
-# System Capabilities
-
-- IT Division & Condo Contributions
+- Lawrenium: IT Division & Condo Contributions
   - 1145 Compute nodes
   - 30,192 CPUs
   - 160 GPUs 
@@ -59,8 +56,11 @@ Slides can be found on github from [here](https://github.com/lbnl-science-it/Tra
 - Recharge account: pay as you go with minimal recharge rate ~ $0.01/SU (ac_xxx)
 - [Details](http://scs.lbl.gov/getting-an-account) 
 - PIs can add researchers/students working with them to get user accounts with access to the PCA/condo/recharge resources available to them
-  - User account [request](http://scs.lbl.gov/getting-an-account)
-  - User agreement [consent](http://scs.lbl.gov/getting-an-account)
+
+### User accounts
+- [User account request](http://scs.lbl.gov/getting-an-account)
+- [User agreement consent](http://scs.lbl.gov/getting-an-account)
+
 
 ### Login to Lawrencium Cluster
 
@@ -96,19 +96,22 @@ $ password:
 
 ### scp/rsync on lrc-xfer.lbl.gov (DTN)
 ```
-# On local machine transfer to Lawrencium
+# Transfer to Lawrencium (from your local machine)
 scp file-xxx $USER@lrc-xfer.lbl.gov:/global/home/users/$USER
 scp -r dir-xxx $USER@lrc-xfer.lbl.gov:/global/scratch/$USER
 
-# On Local machine transfer from Lawrencium
+# Transfer data from Lawrencium (from your local machine)
 scp $USER@lrc-xfer.lbl.gov:/global/scratch/$USER/file-xxx ~/Desktop
 
 # Transfer from Lawrencium to Another Institute
-ssh $USER@lrc-xfer.lbl.gov
+ssh $USER@lrc-xfer.lbl.gov   # DTN
 scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
 ```
+rsync: a better data transfer tool with regular backups
+`rsync -avpz file-at-local $USER@lrc-xfer.lbl.gov:/global/home/user/$USER`
+
 - On Window
-  - [WinSCP](https://winscp.net/eng/index.php)
+  - [WinSCP](https://winscp.net/eng/index.php): SFTP client and FTP client for Microsoft Windows
   - [FileZella](https://filezilla-project.org/): multi-platform program via SFTP
 
 ### Data Transfer using Globus
@@ -150,7 +153,7 @@ module load intel/2016.4.072
 module av
 module load mkl/2016.4.072 openmpi/3.0.1-intel
 ```
-- You can learn more environment modules from [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
+- More environment modules can be found [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/sl6-module-farm-guide)
 - Users are allowed to install software in their home or group space
 
 
