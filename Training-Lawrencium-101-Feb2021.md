@@ -570,7 +570,7 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 # Hands-on Exercise
 
 1) Login and data transfer
-2) Module load
+2) Set up work environment using module commands
 3) Edit files
 4) Submit jobs
 
