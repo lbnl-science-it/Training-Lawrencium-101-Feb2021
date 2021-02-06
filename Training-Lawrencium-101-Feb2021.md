@@ -13,7 +13,7 @@
 - Open Ondemand with Jupyter notebooks
 - Remote visualization  
 
-Slides can be found on github [here](https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021)
+Slides can be found on github from [here](https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021)
 
 
 # Lawrencium Cluster Overview
@@ -319,9 +319,10 @@ There are two large memory nodes 1.5TB in lr6
 - --partition=lr_bigmem
 
 
-# Submit a Job to GPU cluster (es1)
+## Submit a Job to GPU cluster (es1)
 
-### Interactive Job
+### Interactive Jobs
+
 - --gres=gpu:type:GPU#
 - --ntasks=CPU_CORE#
 - Note: Ratio of CPU_CORE#:GPU# = 2:1
@@ -367,7 +368,7 @@ GPU 2: GeForce GTX 1080 Ti (UUID: GPU-e5c71e18-25a6-523c-34b2-0c0cb448acb8)
 GPU 3: GeForce GTX 1080 Ti (UUID: GPU-fa31d967-ffe0-d500-e7eb-25e1349c8b05)```
 ```
 
-## A Batch GPU Job 
+### Submit A GPU Batch Job 
 
 Job Submission Script Example 
 
@@ -377,7 +378,7 @@ Job Submission Script Example
 #SBATCH --job-name=mytest
 #SBATCH --partition=es1         ## es1 GPU partition
 #SBATCH --account=scs
-#SBATCH --qos=lr_normal
+#SBATCH --qos=es_normal         ## qos of es1
 #SBATCH --time=1:00:00
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:GTX1080TI:2  ## GPU cards
@@ -390,11 +391,59 @@ module load python/3.7
 python my.py >& mypy.out 
 ````
 
+
+### Submit A MPI Job
+
+When use multiple nodes, you need to carefully specify the resources. The key flags for use in your job script are:
+
+- --nodes (or -N): number of nodes 
+- --ntasks-per-node: number of tasks (i.e., processes) one wants to run on each node, when your job uses large memory, < Max Core# of a node 
+- --cpus-per-task (or -c): number of cpus to be used for each task
+- --ntasks (or -n): total number of tasks and let the scheduler determine how many nodes and tasks per node are needed. 
+- In general --cpus-per-task will be 1 except when running threaded code.
+
+```
+#!/bin/bash -l
+
+#SBATCH --job-name=mytest
+#SBATCH --partition=lr6
+#SBATCH --account=scs
+#SBATCH --qos=lr_normal
+#SBATCH --time=2:00:00
+#SBATCH --nodes=2             ## Node count
+##SBATCH --ntasks=80          ## Number of MPI tasks to launch (example):  
+##SBATCH --cpus-per-task=1
+##SBATCH --ntasks-per-node    ## important with large memory requirement
+cd /your/dir
+
+## Commands to run
+module load intel/2016.4.072 openmpi/3.0.1-intel
+mpirun -np 80 ./a.out        ## your MPI application
+````
+
+
+### Submit Serial Tasks in Parallel (GNU Parallel) 
+
+GNU Parallel is a shell tool for executing jobs in parallel on one or multiple computers. 
+- A job can be a single core serial task, multi-core or MPI application. 
+- A job can also be a command that reads from a pipe. 
+- The typical input is a list of parameters required for each task. 
+- GNU parallel can then split the input and pipe it into commands in parallel. 
+- GNU parallel makes sure output from the commands is the same output as you would get had you run the commands sequentially, and output names can be easily correlated to input file names for easy post-data processing. This makes it possible to use output from GNU parallel as input for other programs.
+```
+parallel --jobs $JOBS_PER_NODE --slf hostfile --wd $WDIR --joblog task.log --resume --progress \
+
+                -a task.lst sh run-blast.sh {} output/{/.}.blst $NTHREADS
+```
+ 
+Detailed information of how to submit serial tasks in parallel can be found [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/faq)
+
+
 # Monitoring Jobs
 
-- sinfo: check status of partitions and nodes (idle, allocated, drain, down) 
+- sinfo: check node status of partitions (idle, allocated, drain, down) 
 ```
-sinfo –r –p lr5
+[wfeinstein@n0000 ~]$ sinfo –r –p lr5
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST 
 lr5          up   infinite      3 drain* n0004.lr5,n0032.lr5,n0169.lr5 
 lr5          up   infinite      2  down* n0112.lr5,n0118.lr5 
@@ -403,15 +452,22 @@ lr5          up   infinite    115   idle n0005.lr5,n0007.lr5,n0008.lr5
 lr5          up   infinite     14   down n0048.lr5,n0050.lr5,n0054.lr5
 ...
 ```
-- squeue: check jobs in the batch queuing system (R or PD)
+- squeue: check job status in the batch queuing system (R or PD)
 ```
 squeue –u $USER
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON) 
           28757187       lr6     bash wfeinste  R       0:09      1 n0215.lr6 
+          28757723       es1     bash wfeinste  R       0:16      1 n0002.es1 
+          28759191       lr6     bash wfeinste PD       0:00    120 (QOSMaxNodePerJobLimit)
 ```
 - sacct: check job information or history
 ```
-sacct -X -o 'jobid,user,partition,nodelist,stat'
+[wfeinstein@n0002 ~]$ sacct -j 28757723
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+28757723           bash        es1        scs          2    RUNNING      0:0 
+
+[wfeinstein@n0002 ~]$ sacct -X -o 'jobid,user,partition,nodelist,stat'
        JobID      User  Partition        NodeList      State 
 ------------ --------- ---------- --------------- ---------- 
 28755594     wfeinste+        lr5       n0192.lr5  COMPLETED 
@@ -419,12 +475,13 @@ sacct -X -o 'jobid,user,partition,nodelist,stat'
 28755598     wfeinste+        lr5       n0192.lr5  COMPLETED 
 28755604     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
 28755693     wfeinste+        lr6       n0101.lr6 CANCELLED+ 
-28755890     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
-28755904     wfeinste+ csd_lr6_s+       n0144.lr6  COMPLETED 
-28755910     wfeinste+        lr5       n0192.lr5  COMPLETED 
 ....
+28757187     wfeinste+        lr6       n0215.lr6  COMPLETED 
+28757386     wfeinste+        es1       n0019.es1     FAILED 
+28757389     wfeinste+        es1       n0002.es1    TIMEOUT 
+28757723     wfeinste+        es1       n0002.es1    RUNNING 
 ```
-- wwall -j <JOB_ID>
+- wwall -j <JOB_ID>: check an active job resouce utilization, from a login node
 ```
 [wfeinstein@n0000 ~]$ wwall -j 28757187
 --------------------------------------------------------------------------------
@@ -442,7 +499,8 @@ n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY
 ```
 More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
 - scancel : cancel a job
-`scancel jobID`
+- `scancel jobID`
+
 
 
 # Open Ondemand 
