@@ -26,11 +26,11 @@
 # System Capabilities
 
 - IT Division & Condo Contributions
-  - 1058 Compute nodes
+  - 1145 Compute nodes
   - 30,192 CPUs
-  - 150 GPUs
-  - 712 User Accounts
-  - 317 Groups 
+  - 160 GPUs 
+  - 722 User Accounts
+  - 416 Groups 
 
 - Standalone Clusters
   - UC Berkeley  
@@ -40,7 +40,7 @@
   - Biological Systems Engineer Division
 
 
-# Conceptual diagram of Lawrencium
+# Conceptual Diagram of Lawrencium
 
 <left><img src="figures/lrc.png" width="70%"></left>
 
@@ -122,9 +122,17 @@ scp -r file-on-lawrencium $USER@other-institute:/destination/path/$USER
 
 # Softwre Module Farm 
 
+- Commonly used compiler, software tools provided to all cluster users
+- Maintained on a centralized storage device and mounted as read-only NFS file system
+ - Compilers: intel, gcc, MPI compilers, Python
+ - Tools: matlab, singularity, cuda
+ - Applications: machine learning, QChem, MD, cp2k
+ - Libraries: fftw, lapack
+- Module: framework to manage users’ software environment 
+- Setup user environment: PATH, LD_LIBRARY_PATH…
+
 ### Module commands
 
-- Suite of software packages are available to user, e.g. compiler, libs...
 - Module is used to manage user environment to avoid clashes between incompatible software 
 ```  
 module purge: clear user’s work environment
@@ -177,7 +185,7 @@ The basic workflow is:
 
 ### Jub Submission
 
-#### Accounts, Partitions, QOS
+#### Accounts, Partitions, QOS (Quality of Service)
  
 - Check slurm association, such as qos, account, partition
 
@@ -187,8 +195,10 @@ The basic workflow is:
 perceus-00|ac_test|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
-perceus-00|lr_test|wfeinstein|lr3|1||||||||||||lr_debug,lr_lowprio,lr_normal,te
+perceus-00|pc_test|wfeinstein|lr_bigmem|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
+perceus-00|lr_test|wfeinstein|lr3|1||||||||||||condo_test|||
 perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
+...
 ```
 
 #### Submit Jobs, Request Compute Nodes
@@ -197,10 +207,81 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 `sbatch --help`
 - sbatch: submit a job to the batch queue system
 `sbatch myjob.sh`
-- srun: request an interactive node(s) and login automatically
-`srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash`
-- salloc : request an interactive GPU node(s)
-`salloc --account=pc_xxx --nodes=1 --partition=es1 --gres=gpu:1 --ntasks=2 --qos=es_normal –t 0:30:0`
+- srun: add your resource request to the queue. When the allocation starts, a new bash session will start up on one of the granted nodes
+- Commonly used for code debugging, testing, monitoring
+```
+srun --account=ac_xxx --nodes=1 --partition=lr5 --time=1:0:0 --qos=lr_normal --pty bash
+or
+srun -A ac_xxx -N 1 -p lr5 -q lr_normal -t 1:0:0 --pty bash
+```
+- salloc : functions similarly srun --pty bash. however when the allocation starts, a new bash session will start up on the login node
+```
+[wfeinstein@n0003 ~]$ salloc --account=scs --nodes=1 --partition=lr6 --time=1:0:0 --qos=lr_normal
+salloc: Granted job allocation 28755918
+salloc: Waiting for resource configuration
+salloc: Nodes n0101.lr6 are ready for job
+[wfeinstein@n0003 ~]$ squeue -u wfeinstein
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON) 
+          28755918       lr6     bash wfeinste  R       0:14      1 n0101.lr6 
+[wfeinstein@n0003 ~]$ ssh n0101.lr6
+[wfeinstein@n0101 ~]$ hostname
+n0101.lr6
+```
+- More flags
+  - Specify node type --constrain (-C)
+  - Memeory contrain for shared cluster: --memory
+
+
+### Request GPU node(s)
+
+- --gres=
+`srun -A your_acct -N 1 -P es1 --gres=gpu:1 --ntasks=2 -q es_normal –t 0:30:0 --pty bash`
+```
+[wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
+[wfeinstein@n0002 ~]$ nvidia-smi
+Sat Feb  6 07:18:40 2021       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.44       Driver Version: 440.44       CUDA Version: 10.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 108...  Off  | 00000000:02:00.0 Off |                  N/A |
+| 32%   49C    P0    63W / 250W |      0MiB / 11178MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce GTX 108...  Off  | 00000000:03:00.0 Off |                  N/A |
+| 23%   39C    P0    61W / 250W |      0MiB / 11178MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  GeForce GTX 108...  Off  | 00000000:81:00.0 Off |                  N/A |
+| 23%   38C    P0    54W / 250W |      0MiB / 11178MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   3  GeForce GTX 108...  Off  | 00000000:82:00.0 Off |                  N/A |
+| 21%   37C    P0    59W / 250W |      0MiB / 11178MiB |      3%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+[wfeinstein@n0002 ~]$ hostname
+n0002.es1
+```
+- Specify GPU type
+  - V100 --gres=gpu:V100:1 
+  - GTX1080TI --gres=gpu:GTX1080TI:1 
+  - GTX1080TI --gres=gpu:GRTX2080TI:1
+``` 
+srun -A scs -N 1 -p es1 --gres=gpu:GTX1080TI:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
+```
+[wfeinstein@n0000 ~]$ srun -A scs -N 1 -p es1 --gres=gpu:V100:1 --ntasks=2 -q es_normal -t 0:30:0 --pty bash
+[wfeinstein@n0013 ~]$ nvidia-smi -L
+GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-51ae41ef-04ac-1ca6-90a7-bd99c6b503bf)
+GPU 1: Tesla V100-SXM2-16GB (UUID: GPU-40c3447f-52d8-164f-978b-55998db3e6ad)
+```
+- 
+ 
 - More flags
   - Specify node type --constrain (-C)
   - Memeory contrain for shared cluster: --memory
@@ -208,7 +289,7 @@ perceus-00|scs|wfeinstein|es1|1||||||||||||es_debug,es_lowprio,es_normal|||
 
 # Submitting a Batch Job 
 
-Job Submission Script Example
+Job Submission Script Example 
 
 ```
 #!/bin/bash -l
@@ -282,8 +363,7 @@ To improve our HPC traing and services, please fill out [Training Survey](https:
 - 1) Login  
 - 2) Data transfer
 - 3) Module load
-- 4) Install python modules
-- 5) Submit jobs
+- 4) Submit jobs
 
 
 # Login and Data Transfer
@@ -312,6 +392,7 @@ scp -r $USER@lrc-xfer.lbl.gov:/global/home/users/$USER/data.bak .
 ls data.*
 ```
 
+
 # Modules
 
 - Display software packages on LRC
@@ -328,5 +409,18 @@ ls data.*
 ```
 
 
+# Job Submission
+
+- Check your account slurm association
+```
+sacctmgr show association -p user=$USER
+
+Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
+perceus-00|scs|wfeinstein|lr6|1|||||||||||||lr6_lowprio,lr_debug,lr_normal|||
+perceus-00|scs|wfeinstein|es1|1|||||||||||||es_debug,es_lowprio,es_normal|||
+
+```
+-   
+- 
 
 
