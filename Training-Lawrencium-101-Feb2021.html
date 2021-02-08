@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="February 8, 2021" />
-  <title>Lawrencium 101</title>
+  <title>Lawrencium 101 HPC Training</title>
   <style>
     html {
       line-height: 1.5;
@@ -151,10 +151,16 @@
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">Lawrencium 101</h1>
+<h1 class="title">Lawrencium 101 HPC Training</h1>
 <p class="author">February 8, 2021</p>
 <p class="date">Wei Feinstein</p>
 </header>
+<h1 id="introduction">Introduction</h1>
+<p>Slides and sample codes can be found on github <a href="https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021">https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021</a></p>
+<p>Video will be posted</p>
+<p>There will be a hands-on session at the end of this training</p>
+<p>Send your questions to chatroom</p>
+<p>Fill out <a href="https://docs.google.com/forms/d/e/1FAIpQLSd2NifASkyCCQxAkClkEY0OrBaU72__VqXFeaL0Ys_wwrATIw/viewform">training survey</a></p>
 <h1 id="outline">Outline</h1>
 <ul>
 <li>Overview of Lawrencium supercluster</li>
@@ -167,29 +173,26 @@
 </li>
 <li>Hands-on exercises</li>
 </ul>
-<p>Slides and sample codes can be found on <a href="https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021">github</a></p>
 <h1 id="lawrencium-cluster-overview">Lawrencium Cluster Overview</h1>
 <ul>
-<li>A computing service provided by the IT Division to support researchers in all disciplines at the Lab</li>
-<li>Help the scientists solve various problems that positively impact the world.<br />
-</li>
+<li>Computing service provided by the IT Division to support researchers in all disciplines at the Lab</li>
 <li>Lawrencium is a LBNL Condo Cluster Computing program
 <ul>
 <li>Significant investment from LBNL</li>
-<li>Individual PIs purchasing nodes and storage</li>
+<li>Individual PIs buy in compute nodes and storage</li>
 <li>Computational cycles are shared among all lawrencium users</li>
 </ul></li>
-<li>Lawrencium: IT Division &amp; Condo Contributions
+<li>Lawrencium:
 <ul>
-<li>1145 Compute nodes</li>
-<li>30,192 CPUs</li>
+<li>data center is housed in the building 50B</li>
+<li>1145 CPU Compute nodes, more than 30,192 cores</li>
 <li>160 GPUs</li>
 <li>722 User Accounts</li>
 <li>416 Groups</li>
 </ul></li>
 <li>Departmental clusters:
 <ul>
-<li>Solely used by individual divisions, but share LRC infrastructure</li>
+<li>share LRC infrastructure, but solely used by individual divisions</li>
 <li>~15, such as nano, mhg, alsacc…<br />
 </li>
 </ul></li>
@@ -214,13 +217,13 @@
 <li>Primary Investigator (PI) Computing Allowance (PCA) account: free 300K SUs per year (pc_xxx)</li>
 <li>Condo account: PIs can buy in compute nodes to be added to the general pool, in exchange for their own priority access and share the Lawrencium infrastructure (lr_xxx)</li>
 <li>Recharge account: pay as you go with minimal recharge rate ~ $0.01/SU (ac_xxx)</li>
-<li>Details about project accounts can be found <a href="http://scs.lbl.gov/getting-an-account">here</a></li>
+<li>Details about project accounts can be found <a href="http://scs.lbl.gov/getting-an-account">here</a> and <a href="https://docs.google.com/forms/d/e/1FAIpQLSeAqRcB61J8x3YAuca4QxgMW6OneLbC8wVRbafHNOZDE-h4Fg/viewform">project request form</a></li>
 <li>PIs can add researchers/students working with them to get user accounts with access to the PCA/condo/recharge resources available to them</li>
 </ul>
 <h1 id="user-accounts">User accounts</h1>
 <ul>
-<li><a href="http://scs.lbl.gov/getting-an-account">User account request</a></li>
-<li><a href="http://scs.lbl.gov/getting-an-account">User agreement consent</a></li>
+<li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf76kbdJd4GwRQX_iVYVgYwo_wBFmKCcsXyqsnWwlmf_JUgNA/viewform">User account request</a></li>
+<li><a href="https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/useragreement">User agreement</a></li>
 </ul>
 <h3 id="login-to-lawrencium-cluster">Login to Lawrencium Cluster</h3>
 <ul>
@@ -248,7 +251,7 @@ $ password:</code></pre>
 <li>Condo storage: <code>e.g. /clusterfs/etna/</code></li>
 </ul>
 <h1 id="data-transfer">Data Transfer</h1>
-<h3 id="scprsync-on-lrc-xfer.lbl.gov-dtn">scp/rsync on lrc-xfer.lbl.gov (DTN)</h3>
+<h4 id="scprsync-on-lrc-xfer.lbl.gov-dtn">scp/rsync on lrc-xfer.lbl.gov (DTN)</h4>
 <pre><code># Transfer to Lawrencium (from your local machine)
 scp file-xxx $USER@lrc-xfer.lbl.gov:/global/home/users/$USER
 scp -r dir-xxx $USER@lrc-xfer.lbl.gov:/global/scratch/$USER
@@ -342,22 +345,29 @@ Successfully installed ml-python-2.2
 <h1 id="slurm-resource-manager-job-scheduler">SLURM: Resource Manager &amp; Job Scheduler</h1>
 <h3 id="overview">Overview</h3>
 <p>SLURM is the resource manager and job scheduler to managing all the jobs on the cluster</p>
-<p>Why is this necessary? - Prevent users’ jobs running on the same nodes. - This also allows everyone to fairly share Lawrencium resources.</p>
+<p>Why is this necessary?</p>
+<ul>
+<li>prevent users’ jobs running on the same nodes.</li>
+<li>allow everyone to fairly share Lawrencium resources.</li>
+</ul>
 <p>The basic workflow is:</p>
 <ul>
 <li>login to Lawrencium; you’ll end up on one of the login nodes in your home directory</li>
 <li>cd to the directory from which you want to submit the job</li>
 <li>submit the job using sbatch (or an interactive job using srun, discussed later)</li>
-<li>when your job starts, the working directory will be the one from which the job was submitted</li>
+<li>SLURM assign compute nodes to jobs</li>
 <li>the job will be running on a compute node, not the login node</li>
 </ul>
-<h4 id="accounts-partitions-quality-of-service-qos">Accounts, Partitions, Quality of Service (QOS)</h4>
+<h1 id="accounts-partitions-quality-of-service-qos">Accounts, Partitions, Quality of Service (QOS)</h1>
+<p><left><img src="figures/lrc_partitions.png" width="40%"></left></p>
+<p>More info click <a href="https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/lbnl-supercluster/lawrencium">here</a></p>
 <ul>
 <li>Check slurm association, such as qos, account, partition, the information is required when submitting a job</li>
 </ul>
-<p><code>sacctmgr show association user=wfeinstein -p</code></p>
-<pre><code>Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
-perceus-00|scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
+<pre><code>sacctmgr show association user=wfeinstein -p
+
+Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
+perceus-00|pc_scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr_bigmem|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
@@ -550,7 +560,7 @@ cd /your/dir
 ## Commands to run
 module load intel/2016.4.072 openmpi/3.0.1-intel
 mpirun -np 80 ./my_mpi_exe        ## Launch your MPI application</code></pre>
-<h1 id="submit-tasks-in-parallel-gnu-parallel">Submit Tasks in Parallel (GNU Parallel)</h1>
+<h1 id="submit-jobs-in-parallel-gnu-parallel">Submit jobs in Parallel (GNU Parallel)</h1>
 <p>GNU Parallel is a shell tool for executing jobs in parallel on one or multiple computers.</p>
 <ul>
 <li>A job can be a single core serial task, multi-core or MPI application.</li>
@@ -558,12 +568,12 @@ mpirun -np 80 ./my_mpi_exe        ## Launch your MPI application</code></pre>
 <li>The typical inputs:
 <ul>
 <li>bash script for a single task</li>
-<li>a list of parameters required for each task.</li>
+<li>a list of parameters required for each task</li>
 </ul></li>
 <li>Easy to match output file names with those of input files</li>
 </ul>
 <h1 id="example-using-gnu-parallel">Example using GNU Parallel</h1>
-<p>Run blastp to compare 200 target protein sequences against sequence DB</p>
+<p>Bioinformatics tool <em>blastp</em> to compare 200 target protein sequences against sequence DB</p>
 <p>Serial bash script: <strong>run-blast.sh</strong></p>
 <pre><code>#!/bin/bash
 module load  bio/blast/2.6.0
@@ -575,7 +585,9 @@ blastp -query $1 -db ../blast/db/img_v400_PROT.00 -out $2  -outfmt 7 -max_target
  ...
  ../blast/data/protein200.faa</code></pre>
 <p>Instead submit single core-jobs 200 times, which potentially need 200 nodes, GNU parallel sends single-core jobs in parallel using all the cores available, e.g. 2 compute nodes 32*2=64 parallel tasks. Once a CPU core becomes available, another job will be sent to this resource.</p>
-<pre><code>parallel --jobs $JOBS_PER_NODE --slf hostfile --wd $WDIR --joblog task.log --resume --progress \
+<pre><code>module load parallel/20200222
+JOBS_PER_NODE=32
+parallel --jobs $JOBS_PER_NODE --slf hostfile --wd $WDIR --joblog task.log --resume --progress \
                 -a task.lst sh run-blast.sh {} output/{/.}.blst </code></pre>
 <p>Detailed information of how to submit serial tasks in parallel with <a href="https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/faq">GNU parallel</a></p>
 <h1 id="monitoring-jobs">Monitoring Jobs</h1>
@@ -635,7 +647,10 @@ Total CPU utilization: 0%
  Node      Cluster        CPU       Memory (MB)      Swap (MB)      Current
  Name       Name       [util/num] [% used/total]   [% used/total]   Status
 n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY</code></pre>
-<p>More information of <a href="https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions">slurm usage</a> - scancel : cancel a job - <code>scancel jobID</code></p>
+<ul>
+<li><code>scancel &lt;jobID&gt;</code> : scancel a job</li>
+</ul>
+<p>More information of <a href="https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions">slurm usage</a></p>
 <h1 id="open-ondemand">Open Ondemand</h1>
 <ul>
 <li>Single web point of entry to Lawrencium supercluster</li>
@@ -649,15 +664,15 @@ n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY</code>
 <li>Interactive applications: Jupyter notebooks, MatLab, RStudio…</li>
 <li>Jupyter notebook
 <ul>
-<li>Two partitions, including 4 CPU nodes and 1 GPU node, for exploration</li>
-<li>Access to all Lawrencium partitions for computing jobs</li>
+<li>Two partitions, including 4 CPU nodes and 1 GPU node, for code exploration</li>
+<li>Access to all Lawrencium partitions for running computing jobs</li>
 </ul></li>
 <li>Sever: <a href="https://lrc-ondemand.lbl.gov/">https://lrc-ondemand.lbl.gov/</a>
 <ul>
 <li>Intel Xeon Gold processor with 32 cores, 96 GB RAM</li>
 </ul></li>
 </ul>
-<h1 id="open-ondemand-one-minute-demo-using-jupyter-notebooks">Open Ondemand One-Minute Demo Using Jupyter Notebooks</h1>
+<h1 id="open-ondemand-one-minute-demo-launching-jupyter-notebooks">Open Ondemand One-Minute Demo Launching Jupyter Notebooks</h1>
 <p><a href="https://lrc-ondemand.lbl.gov/">https://lrc-ondemand.lbl.gov/</a></p>
 <h1 id="remote-visulization">Remote Visulization</h1>
 <ul>
@@ -668,6 +683,8 @@ n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY</code>
 <ul>
 <li>Login to viz node (lrc-viz.lbl.gov)</li>
 <li>Start VNC service on viz node</li>
+<li>Connect to the VNC server with VNC Viewer locally</li>
+<li>VNC Viewer can be downloaded from <a href="https://www.realvnc.com/en/connect/download/viewer/">here</a></li>
 <li>Start applications: Firefox, Jupyter notebooks, paraview …</li>
 <li>Shut it down properly to release resource for other users (logout). Simply close the VNC Viewer does not clean the resource on the server</li>
 </ul></li>
@@ -690,11 +707,12 @@ n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY</code>
 <li>Set up work environment using module commands</li>
 <li>Edit files</li>
 <li>Submit jobs</li>
+<li>Monitor jobs</li>
 </ol>
 <h1 id="login-and-data-transfer">Login and Data Transfer</h1>
 <p>Objective: transfer data to/from LRC</p>
 <ol type="1">
-<li><p>Download test data <a href="figures/data.sample">here</a></p></li>
+<li><p>Download test data <a href="data.sample">here</a></p></li>
 <li><p>Open two linux terminals on Mac or Window via Putty</p></li>
 <li><p>Transfer local data.sample to LRC on terminal 1</p></li>
 </ol>
@@ -727,32 +745,55 @@ ls data.*</code></pre>
 <pre><code>## To use vim
 vim myfile.txt
 ## To use emacs
-emacs myfile.txt
-```1
+emacs myfile.txt</code></pre>
+<h1 id="job-submission-1">Job Submission</h1>
+<ul>
+<li>Check your account slurm association</li>
+</ul>
+<pre><code>sacctmgr show association -p user=$USER
 
+Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
+perceus-00|scs|wfeinstein|lr6|1|||||||||||||lr6_lowprio,lr_debug,lr_normal|||
+perceus-00|scs|wfeinstein|es1|1|||||||||||||es_debug,es_lowprio,es_normal|||
+</code></pre>
+<h3 id="request-an-interactive-node">Request an interactive node</h3>
+<p>Note: Use your account, partition, qos</p>
+<p>srun –account=ac_xxx –nodes=1 –partition=xxx –time=1:0:0 –qos=xxx –pty bash</p>
+<h1 id="submit-a-batch-job-1">Submit a batch job</h1>
+<p>Download a sample <a href="my_submit.sh">job submission script</a> and <a href="my.py">python sample</a></p>
+<p>Note: Use your account, partition, qos</p>
+<pre><code>#!/bin/bash -l
 
-# Job Submission
+# Job name:
+#SBATCH --job-name=mytest
+#
+# Partition:
+#SBATCH --partition=lr6
+#
+# Account:
+#SBATCH --account=your_account
+#
+# qos:
+#SBATCH --qos=lr_normal
+#
+# Wall clock time:
+#SBATCH --time=1:00:00
+#
+# Node count
+#SBATCH --nodes=1
+#
+# Node feature
+##SBATCH --constrain=lr6_cas
+#
+# cd to your work directory
+cd /global/scratch/$USER
 
-- Check your account slurm association</code></pre>
-<p>sacctmgr show association -p user=$USER</p>
-<p>Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins| perceus-00|scs|wfeinstein|lr6|1|||||||||||||lr6_lowprio,lr_debug,lr_normal||| perceus-00|scs|wfeinstein|es1|1|||||||||||||es_debug,es_lowprio,es_normal|||</p>
-<pre><code>
-### Request an interactive node
-
-Note: Use your account, partition, qos
-
-srun --account=ac_xxx --nodes=1 --partition=xxx --time=1:0:0 --qos=xxx --pty bash
-
-
-# Submit a batch job
-
-Download a sample [job submission script](figures/my_submit.sh) and [python sample](figures/my.py)
-
-Note: Use your account, partition, qos</code></pre>
-<p>#!/bin/bash -l</p>
-<h1 id="job-name">Job name:</h1>
-<p>#SBATCH –job-name=mytest # # Partition: #SBATCH –partition=lr6 # # Account: #SBATCH –account=your_account # # qos: #SBATCH –qos=lr_normal # # Wall clock time: #SBATCH –time=1:00:00 # # Node count #SBATCH –nodes=1 # # Node feature ##SBATCH –constrain=lr6_cas # # cd to your work directory cd /global/scratch/$USER</p>
-<h2 id="commands-to-run">Commands to run</h2>
-<p>module load python/3.7 python my.py &gt;&amp; mypy.out ````</p>
+## Commands to run
+module load python/3.7
+python my.py &gt;&amp; mypy.out </code></pre>
+<h1 id="monitor-jobs">Monitor jobs</h1>
+<p><code>squeu -u $USER</code></p>
+<p><code>sacct -j &lt;JOBID&gt;</code></p>
+<p><code>wwall -j &lt;JOBID&gt;</code></p>
 </body>
 </html>

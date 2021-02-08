@@ -1,7 +1,19 @@
-% Lawrencium 101 
+% Lawrencium 101 HPC Training 
 % February 8, 2021
 % Wei Feinstein
 
+# Introduction
+
+Slides and sample codes can be found on github [https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021](https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021)
+
+Video will be posted
+
+There will be a hands-on session at the end of this training
+
+Send your questions to chatroom
+
+Fill out [training survey](https://docs.google.com/forms/d/e/1FAIpQLSd2NifASkyCCQxAkClkEY0OrBaU72__VqXFeaL0Ys_wwrATIw/viewform)
+ 
 
 # Outline
 
@@ -14,27 +26,24 @@
 - Remote visualization  
 - Hands-on exercises
 
-Slides and sample codes can be found on [github](https://github.com/lbnl-science-it/Training-Lawrencium-101-Feb2021)
-
 
 # Lawrencium Cluster Overview
 
-- A computing service provided by the IT Division to support researchers in all disciplines at the Lab
-- Help the scientists solve various problems  that positively impact the world.  
+- Computing service provided by the IT Division to support researchers in all disciplines at the Lab
 - Lawrencium is a LBNL Condo Cluster Computing program
   - Significant investment from LBNL
-  - Individual PIs purchasing nodes and storage
+  - Individual PIs buy in compute nodes and storage
   - Computational cycles are shared among all lawrencium users
 
-- Lawrencium: IT Division & Condo Contributions
-  - 1145 Compute nodes
-  - 30,192 CPUs
+- Lawrencium: 
+  - data center is housed in the building 50B
+  - 1145 CPU Compute nodes, more than 30,192 cores
   - 160 GPUs 
   - 722 User Accounts
   - 416 Groups 
 
 - Departmental clusters: 
-  - Solely used by individual divisions, but share LRC infrastructure 
+  - share LRC infrastructure, but solely used by individual divisions
   - ~15, such as nano, mhg, alsacc...  
 - Standalone Clusters
   - UC Berkeley  
@@ -58,13 +67,13 @@ Slides and sample codes can be found on [github](https://github.com/lbnl-science
 - Primary Investigator (PI) Computing Allowance (PCA) account: free 300K SUs per year (pc_xxx)
 - Condo account: PIs can buy in compute nodes to be added to the general pool, in exchange for their own priority access and share the Lawrencium infrastructure (lr_xxx)
 - Recharge account: pay as you go with minimal recharge rate ~ $0.01/SU (ac_xxx)
-- Details about project accounts can be found [here](http://scs.lbl.gov/getting-an-account) 
+- Details about project accounts can be found [here](http://scs.lbl.gov/getting-an-account) and [project request form](https://docs.google.com/forms/d/e/1FAIpQLSeAqRcB61J8x3YAuca4QxgMW6OneLbC8wVRbafHNOZDE-h4Fg/viewform) 
 - PIs can add researchers/students working with them to get user accounts with access to the PCA/condo/recharge resources available to them
 
 
 # User accounts
-- [User account request](http://scs.lbl.gov/getting-an-account)
-- [User agreement consent](http://scs.lbl.gov/getting-an-account)
+- [User account request](https://docs.google.com/forms/d/e/1FAIpQLSf76kbdJd4GwRQX_iVYVgYwo_wBFmKCcsXyqsnWwlmf_JUgNA/viewform)
+- [User agreement](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/useragreement)
 
 
 ### Login to Lawrencium Cluster
@@ -94,7 +103,7 @@ $ password:
 
 # Data Transfer 
 
-### scp/rsync on lrc-xfer.lbl.gov (DTN)
+#### scp/rsync on lrc-xfer.lbl.gov (DTN)
 ```
 # Transfer to Lawrencium (from your local machine)
 scp file-xxx $USER@lrc-xfer.lbl.gov:/global/home/users/$USER
@@ -194,26 +203,32 @@ Successfully installed ml-python-2.2
 SLURM is the resource manager and job scheduler to managing all the jobs on the cluster
 
 Why is this necessary? 
-- Prevent users' jobs running on the same nodes. 
-- This also allows everyone to fairly share Lawrencium resources.
+
+- prevent users' jobs running on the same nodes. 
+- allow everyone to fairly share Lawrencium resources.
 
 The basic workflow is:
 
   - login to Lawrencium; you'll end up on one of the login nodes in your home directory
   - cd to the directory from which you want to submit the job
   - submit the job using sbatch (or an interactive job using srun, discussed later)
-  - when your job starts, the working directory will be the one from which the job was submitted
+  - SLURM assign compute nodes to jobs
   - the job will be running on a compute node, not the login node 
 
-#### Accounts, Partitions, Quality of Service (QOS)
- 
+
+# Accounts, Partitions, Quality of Service (QOS)
+
+<left><img src="figures/lrc_partitions.png" width="40%"></left> 
+
+More info click [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/lbnl-supercluster/lawrencium)
+
 - Check slurm association, such as qos, account, partition, the information is required when submitting a job
 
-`sacctmgr show association user=wfeinstein -p`
-
 ```
+sacctmgr show association user=wfeinstein -p
+
 Cluster|Account|User|Partition|Share|Priority|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
-perceus-00|scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
+perceus-00|pc_scs|wfeinstein|lr6|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|ac_test|wfeinstein|lr5|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr4|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
 perceus-00|pc_test|wfeinstein|lr_bigmem|1||||||||||||lr_debug,lr_lowprio,lr_normal|||
@@ -441,7 +456,7 @@ mpirun -np 80 ./my_mpi_exe        ## Launch your MPI application
 ````
 
 
-# Submit Tasks in Parallel (GNU Parallel) 
+# Submit jobs in Parallel (GNU Parallel) 
 
 GNU Parallel is a shell tool for executing jobs in parallel on one or multiple computers. 
 
@@ -449,13 +464,13 @@ GNU Parallel is a shell tool for executing jobs in parallel on one or multiple c
 - A job can also be a command that reads from a pipe. 
 - The typical inputs:
   - bash script for a single task
-  - a list of parameters required for each task.
+  - a list of parameters required for each task
 - Easy to match output file names with those of input files 
 
 
 # Example using GNU Parallel
 
-Run blastp to compare 200 target protein sequences against sequence DB
+Bioinformatics tool *blastp* to compare 200 target protein sequences against sequence DB
  
 Serial bash script: **run-blast.sh**
 ```
@@ -473,6 +488,8 @@ blastp -query $1 -db ../blast/db/img_v400_PROT.00 -out $2  -outfmt 7 -max_target
 ```
 Instead submit single core-jobs 200 times, which potentially need 200 nodes, GNU parallel sends single-core jobs in parallel using all the cores available, e.g. 2 compute nodes 32*2=64 parallel tasks. Once a CPU core becomes available, another job will be sent to this resource.   
 ```
+module load parallel/20200222
+JOBS_PER_NODE=32
 parallel --jobs $JOBS_PER_NODE --slf hostfile --wd $WDIR --joblog task.log --resume --progress \
                 -a task.lst sh run-blast.sh {} output/{/.}.blst 
 ```
@@ -538,9 +555,10 @@ Total CPU utilization: 0%
  Name       Name       [util/num] [% used/total]   [% used/total]   Status
 n0215.lr6               0%   (40) % 3473/192058    % 1655/8191      READY
 ```
+
+- `scancel <jobID>` : scancel a job 
+
 More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/scheduler/slurm-usage-instructions)
-- scancel : cancel a job
-- `scancel jobID`
 
 
 # Open Ondemand 
@@ -553,13 +571,13 @@ More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-perfor
 - Monitor jobs:/?
 - Interactive applications: Jupyter notebooks, MatLab, RStudio...
 - Jupyter notebook  
-   - Two partitions, including 4 CPU nodes and 1 GPU node, for exploration
-   - Access to all Lawrencium partitions for computing jobs
+   - Two partitions, including 4 CPU nodes and 1 GPU node, for code exploration
+   - Access to all Lawrencium partitions for running computing jobs
 - Sever: [https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
   - Intel Xeon Gold processor with 32 cores, 96 GB RAM
 
 
-# Open Ondemand One-Minute Demo Using Jupyter Notebooks
+# Open Ondemand One-Minute Demo Launching Jupyter Notebooks
 
 [https://lrc-ondemand.lbl.gov/](https://lrc-ondemand.lbl.gov/)
  
@@ -572,6 +590,8 @@ More information of [slurm usage](https://sites.google.com/a/lbl.gov/high-perfor
 - RealVNC is provided as the remote desktop service, steps:
   - Login to viz node (lrc-viz.lbl.gov)
   - Start VNC service on viz node
+  - Connect to the VNC server with VNC Viewer locally
+  - VNC Viewer can be downloaded from [here](https://www.realvnc.com/en/connect/download/viewer/) 
   - Start applications: Firefox, Jupyter notebooks, paraview ...
   - Shut it down properly to release resource for other users (logout). Simply close the VNC Viewer does not clean the resource on the server
 - Refer to the detailed instructions [here](https://sites.google.com/a/lbl.gov/high-performance-computing-services-group/getting-started/remote-desktop)
@@ -594,13 +614,13 @@ To improve our HPC training and services, please fill out [Training Survey](http
 2) Set up work environment using module commands
 3) Edit files
 4) Submit jobs
-
+5) Monitor jobs
 
 # Login and Data Transfer
 
 Objective: transfer data to/from LRC 
 
-1) Download test data [here]( figures/data.sample) 
+1) Download test data [here]( data.sample) 
 
 2) Open two linux terminals on Mac or Window via Putty 
 
@@ -646,7 +666,7 @@ Linux editor: vim and emacs installed. Just start the editor from a login node.
 vim myfile.txt
 ## To use emacs
 emacs myfile.txt
-```1
+```
 
 
 # Job Submission
@@ -670,7 +690,7 @@ srun --account=ac_xxx --nodes=1 --partition=xxx --time=1:0:0 --qos=xxx --pty bas
 
 # Submit a batch job
 
-Download a sample [job submission script](figures/my_submit.sh) and [python sample](figures/my.py)
+Download a sample [job submission script](my_submit.sh) and [python sample](my.py)
 
 Note: Use your account, partition, qos
 ```
@@ -705,4 +725,11 @@ module load python/3.7
 python my.py >& mypy.out 
 ````
 
+# Monitor jobs
+
+`squeu -u $USER`
+
+`sacct -j <JOBID>`
+
+`wwall -j <JOBID>`
 
